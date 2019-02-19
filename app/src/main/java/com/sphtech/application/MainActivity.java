@@ -1,12 +1,9 @@
 package com.sphtech.application;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
     private MaterialDialog mDialog;
     private MobileUsageDataAdapter mobileUsageDataAdapter;
     private MobileUsageViewModel mobileUsageViewModel;
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Bind(R.id.md_contentRecyclerView)
     RecyclerView mdContentRecyclerView;
@@ -54,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        setupProgressBar();
         BaseFlyContext.getInstant().setActivity(this);
         IRemoteServices remoteServices = new RemoteServices(this);
         MobileUsageViewModelProvider postProvider = new MobileUsageViewModelProvider(remoteServices);
@@ -61,7 +59,29 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
         setUpObservers();
         yearDataModels = new ArrayList<>();
         setupRecylerView();
+        setUpPullToRefreshLayout();
 
+    }
+
+    private void setUpPullToRefreshLayout() {
+         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+               // Refresh items
+                    mobileUsageViewModel.getDataFromAPiOrCacheOrFromDb();
+
+            }
+        });
+        // Configure the refreshing colors
+        mSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_purple
+                );
     }
 
     private void setupRecylerView() {
@@ -77,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
     }
 
     private void setUpObservers() {
+
+
 
         mobileUsageViewModel.getMobileDataUsageData()
                 .observe(this, this::updateDataset);
@@ -116,22 +138,26 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
     }
 
     public void showToast(String message) {
+        mSwipeRefreshLayout.setRefreshing(false);
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 
-   /* private void setupProgressBar() {
+    private void setupProgressBar() {
         mProgressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
         mProgressDialog.setMessage(getResources().getString(R.string.processing));
-        mProgressDialog.setCancelable(false);
-    }*/
+        mProgressDialog.setCancelable(true);
+    }
 
     private void showLceStatus(LCEStatus status) {
         if (status.getStatus() == LCEStatus.Status.SUCCESS) {
+            mSwipeRefreshLayout.setRefreshing(false);
             showProgress(false, "");
         } else if (status.getStatus() == LCEStatus.Status.ERROR) {
+            mSwipeRefreshLayout.setRefreshing(false);
             showErrorAlertDialog(status.getTitle(), status.getMsg());
         } else if (status.getStatus() == LCEStatus.Status.LOADING) {
+            mSwipeRefreshLayout.setRefreshing(false);
             showProgress(true, status.getMsg());
         }
     }

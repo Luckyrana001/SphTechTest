@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SphTechTest</string>
+    <string name="processing">Loading...</string>
 </resources>

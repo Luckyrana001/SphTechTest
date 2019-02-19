@@ -37,9 +37,9 @@ public class MobileUsageViewModel extends ViewModel {
         Logger.d("vm constructor");
         mRemoteServices = rservice;
         recordsDao= AppDatabase.getInstance(BaseFlyContext.getInstant().getApplicationContext()).userDao();
+        LCEStatus.loading("Loading Mobile Usage Data ...");
 
-
-        getDataFromAPiOrCache();
+        getDataFromAPiOrCacheOrFromDb();
 
 
 
@@ -59,7 +59,8 @@ public class MobileUsageViewModel extends ViewModel {
 
             @Override
             protected void onPostExecute(Void agentsCount) {
-                mlWarningStatus.setValue("table data iserted.");
+                //mlWarningStatus.setValue("table data iserted.");
+
             }
         }.execute();
     }
@@ -68,29 +69,36 @@ public class MobileUsageViewModel extends ViewModel {
         new AsyncTask<Void, Void, ArrayList<YearDataModel>>() {
             @Override
             protected ArrayList<YearDataModel>  doInBackground(Void... params) {
-                List<YearlyRecordsData> data = recordsDao.getAll();
-                YearlyRecordsData value = data.get(0);
-                String records = value.getRecords();
-                MobileDataConsumptionYearlyModel recordData = new Gson().fromJson(records,MobileDataConsumptionYearlyModel.class);
-                ArrayList<YearDataModel> getYearlyData =  recordData.getYearlyData();
+                try {
+                    List<YearlyRecordsData> data = recordsDao.getAll();
+                    YearlyRecordsData value = data.get(0);
+                    String records = value.getRecords();
+                    MobileDataConsumptionYearlyModel recordData = new Gson().fromJson(records, MobileDataConsumptionYearlyModel.class);
+                    ArrayList<YearDataModel> getYearlyData = recordData.getYearlyData();
 
-                return getYearlyData;
+                    return getYearlyData;
+                }catch (Exception e){
+                    return  null;
+                }
             }
 
             @Override
             protected void onPostExecute(ArrayList<YearDataModel> getYearlyData) {
-                mlYearlyDataConsumption.setValue(getYearlyData);
+
 
                 if(getYearlyData==null || getYearlyData.size()==0){
-                    mlWarningStatus.setValue("table data updated.");
-                    mlLceStatus.postValue(LCEStatus.error("Data Load Failed", ",Please check your internet connection and retry again."));
-
+                    //mlWarningStatus.setValue("table data updated.");
+                    mlLceStatus.postValue(LCEStatus.error("Data Load Failed", "Please check your internet connection and retry again."));
+                    LCEStatus.success();
+                }else{
+                    LCEStatus.success();
+                    mlYearlyDataConsumption.setValue(getYearlyData);
                 }
             }
         }.execute();
     }
 
-    public void getDataFromAPiOrCache() {
+    public void getDataFromAPiOrCacheOrFromDb() {
         mRemoteServices
                 .getMobileDataUsage("adf")
                 .doOnSubscribe(disposable -> LCEStatus.loading("Loading Mobile Usage Data ..."))
@@ -112,8 +120,6 @@ public class MobileUsageViewModel extends ViewModel {
                     } else {
                         mlLceStatus.postValue(LCEStatus.error("Data Error", "Data Load Failed"));
                     }
-
-
                     Logger.d("verify device id error =>" + throwable.getMessage());
                 });
     }
