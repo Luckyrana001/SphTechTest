@@ -9,8 +9,7 @@ public class ResponseArgs {
     public ResponseStatus responseStatus;
     public RequestType requestType;
 
-    public ResponseArgs(Object args, ResponseStatus responseStatus, RequestType requestType)
-    {
+    public ResponseArgs(Object args, ResponseStatus responseStatus, RequestType requestType) {
         this.args = args;
         this.responseStatus = responseStatus;
         this.requestType = requestType;

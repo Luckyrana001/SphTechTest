@@ -8,7 +8,7 @@ import java.util.ArrayList;
 @JsonIgnoreProperties
 public class Result {
 
-    public  Result(){
+    public Result() {
 
     }
 
@@ -40,7 +40,6 @@ public class Result {
     Integer limit;
     @JsonProperty("total")
     Integer total;
-
 
 
     public String getResourceId() {

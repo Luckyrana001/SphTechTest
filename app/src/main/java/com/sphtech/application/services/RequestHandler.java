@@ -9,12 +9,15 @@ import com.sphtech.application.MobileDataUsageRestService;
 import com.sphtech.application.common.BaseFlyContext;
 import com.sphtech.application.common.RequestType;
 import com.sphtech.application.common.ResponseStatus;
+import com.sphtech.application.common.Utils;
 import com.sphtech.application.listener.IResponseReceivedNotifyInterface;
 import com.sphtech.application.listener.ResponseArgs;
+import com.sphtech.application.model.MobileDataConsumptionYearlyModel;
 import com.sphtech.application.model.MobileDataUsageErrorResponse;
 import com.sphtech.application.model.MobileDataUsageResponse;
+import com.sphtech.application.model.QuaterDataModel;
 import com.sphtech.application.model.Records;
-import com.sphtech.application.model.TotalDataConsumption;
+import com.sphtech.application.model.YearDataModel;
 import com.squareup.okhttp.Cache;
 
 import java.lang.annotation.Annotation;
@@ -107,37 +110,100 @@ public class RequestHandler {
                 if (response.isSuccessful()) {
                     Log.e(TAG, response.toString());
 
-                    ArrayList<Records> records = response.body().getResult().getRecords();
 
-                    TotalDataConsumption totalDataConsumption = new TotalDataConsumption();
-                    ArrayList<String> quaterData = new ArrayList<>();
-                    Double data = 0.0;
-                    boolean isThereDataVolumeDecrease = false;
-                    for(int i=0;i<records.size();i++){
-                        Records rec = records.get(i);
-                        if(rec.getQuarter().contains("2018")){
-                            data = data + rec.getVolumeOfMobileData();
-                            quaterData.add(rec.getVolumeOfMobileData()+"");
-                            if(  i>0 && !isThereDataVolumeDecrease){
-                                if(rec.getVolumeOfMobileData() < records.get(i-1).getVolumeOfMobileData())
-                                {
-                                    isThereDataVolumeDecrease =true;
-                                }
+                    ArrayList<Records> records = response.body().getResult().getRecords();
+                    MobileDataConsumptionYearlyModel mobileDataConsumptionYearlyModel = new MobileDataConsumptionYearlyModel();
+                    ArrayList<YearDataModel> yearDataModelArrayList = new ArrayList<>();
+                    ArrayList<QuaterDataModel> quaterDataModelArrayList = new ArrayList<QuaterDataModel>();
+                    String yearName = "";
+
+                    for (int i = 0; i < records.size(); i++) {
+                        Records record = records.get(i);
+                        String recYear = Utils.getYear(record.getQuarter());
+                        String recQuater = Utils.getQuater(record.getQuarter());
+                        Double dataConsumed = record.getVolumeOfMobileData();
+                        YearDataModel yearDataModel = new YearDataModel();
+
+
+                        if (Integer.parseInt(recYear) >= 2008) {
+                            if (yearName.equals("")) {
+                                yearName = recYear;
                             }
+
+
+                            if (yearName.equals(recYear)) {
+                                QuaterDataModel quaterDataModel = new QuaterDataModel();
+                                quaterDataModel.setQuaterName(recQuater);
+                                quaterDataModel.setDataConsumption(dataConsumed);
+                                quaterDataModelArrayList.add(quaterDataModel);
+                                yearDataModel.setYear(yearName);
+                                if (i == (records.size() - 1)) {
+
+                                    // calculate total data consumption
+                                    Double totalDataConumption = 0.0;
+                                    for (QuaterDataModel dataModel : quaterDataModelArrayList) {
+                                        totalDataConumption = totalDataConumption + dataModel.getDataConsumption();
+                                    }
+                                    // verifying if any quarter in a year demonstrates a decrease in volume data.
+                                    boolean isDataVolumeDecreaseFound = getIsDataVolumeDecreaseFound(quaterDataModelArrayList);
+                                    yearDataModel.setTotalYearlyataConsumption(totalDataConumption);
+                                    yearDataModel.setIsthereDecreaseInVolume(isDataVolumeDecreaseFound);
+                                    yearDataModel.setQuaterlyData(quaterDataModelArrayList);
+                                    yearDataModelArrayList.add(yearDataModel);
+                                    mobileDataConsumptionYearlyModel.setYearlyData(yearDataModelArrayList);
+
+                                }
+
+
+                            } else {
+
+
+                                // calculate total data consumption
+                                Double totalDataConumption = 0.0;
+                                for (QuaterDataModel quaterDataModel : quaterDataModelArrayList) {
+                                    totalDataConumption = totalDataConumption + quaterDataModel.getDataConsumption();
+                                }
+
+                                // verifying if any quarter in a year demonstrates a decrease in volume data.
+                                boolean isDataVolumeDecreaseFound = getIsDataVolumeDecreaseFound(quaterDataModelArrayList);
+                                // updating Yearly data model
+                                yearDataModel.setIsthereDecreaseInVolume(isDataVolumeDecreaseFound);
+                                yearDataModel.setYear(yearName);
+                                yearDataModel.setTotalYearlyataConsumption(totalDataConumption);
+                                yearDataModel.setQuaterlyData(quaterDataModelArrayList);
+                                yearDataModelArrayList.add(yearDataModel);
+                                quaterDataModelArrayList = new ArrayList<QuaterDataModel>();
+                                yearName = recYear;
+
+                                QuaterDataModel quaterDataModel = new QuaterDataModel();
+                                quaterDataModel.setQuaterName(recQuater);
+                                quaterDataModel.setDataConsumption(dataConsumed);
+                                quaterDataModelArrayList.add(quaterDataModel);
+
+                                if (i == (records.size() - 1)) {
+                                    yearDataModel.setYear(yearName);
+                                    yearDataModel.setQuaterlyData(quaterDataModelArrayList);
+                                    yearDataModelArrayList.add(yearDataModel);
+                                    mobileDataConsumptionYearlyModel.setYearlyData(yearDataModelArrayList);
+
+                                }
+
+
+                            }
+
                         }
+
                     }
 
-                    totalDataConsumption.setTotalDataConsumption(data+"");
-                    totalDataConsumption.setQuaterDataVolume(quaterData);
-                    totalDataConsumption.setThereDecreaseInVolumeOfData(isThereDataVolumeDecrease);
 
+                    Log.i("formattedData", new Gson().toJson(mobileDataConsumptionYearlyModel) + "");
 
-                    Type type = new TypeToken<TotalDataConsumption>() {
+                    Type type = new TypeToken<MobileDataConsumptionYearlyModel>() {
                     }.getType();
-                    iResponseReceivedNotifyInterface.responseReceived(new ResponseArgs(totalDataConsumption, ResponseStatus.success, RequestType.getMobileDataUsage));
+                    iResponseReceivedNotifyInterface.responseReceived(new ResponseArgs(mobileDataConsumptionYearlyModel, ResponseStatus.success, RequestType.getMobileDataUsage));
 
 
-                   } else {
+                } else {
                     try {
                         Converter<ResponseBody, MobileDataUsageErrorResponse> errorConverter = retrofit.responseBodyConverter(MobileDataUsageErrorResponse.class, new Annotation[0]);
                         MobileDataUsageErrorResponse error = errorConverter.convert(response.errorBody());
@@ -159,12 +225,40 @@ public class RequestHandler {
             @Override
             public void onFailure(Call<MobileDataUsageResponse> call, Throwable t) {
                 // Log error here since request failed
-               iResponseReceivedNotifyInterface.responseReceived(new ResponseArgs(null, ResponseStatus.badRequest, RequestType.errorResponse));
+                iResponseReceivedNotifyInterface.responseReceived(new ResponseArgs(null, ResponseStatus.badRequest, RequestType.errorResponse));
 
 
                 Log.e(TAG, t.toString());
             }
         });
+    }
+
+    private boolean getIsDataVolumeDecreaseFound(ArrayList<QuaterDataModel> quaterDataModelArrayList) {
+        boolean isDataVolumeDecreaseFound = false;
+        if (quaterDataModelArrayList.size() == 2) {
+            Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
+            Double Q2Volume = quaterDataModelArrayList.get(0).getDataConsumption();
+            if (Q1Volume > Q2Volume) {
+                isDataVolumeDecreaseFound = true;
+            }
+        } else if (quaterDataModelArrayList.size() == 3) {
+            Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
+            Double Q2Volume = quaterDataModelArrayList.get(1).getDataConsumption();
+            Double Q3Volume = quaterDataModelArrayList.get(2).getDataConsumption();
+            if (Q1Volume > Q2Volume || Q2Volume > Q3Volume) {
+                isDataVolumeDecreaseFound = true;
+            }
+        } else if (quaterDataModelArrayList.size() == 4) {
+            Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
+            Double Q2Volume = quaterDataModelArrayList.get(1).getDataConsumption();
+            Double Q3Volume = quaterDataModelArrayList.get(2).getDataConsumption();
+            Double Q4Volume = quaterDataModelArrayList.get(3).getDataConsumption();
+
+            if (Q1Volume > Q2Volume || Q2Volume > Q3Volume || Q3Volume > Q4Volume) {
+                isDataVolumeDecreaseFound = true;
+            }
+        }
+        return isDataVolumeDecreaseFound;
     }
 
 

@@ -1,8 +1,5 @@
 package com.sphtech.application.exception;
 
-/**
- * Created by Thet Paing Tun on 6/2/2018.
- */
 
 public class ServiceRuntimeException extends RuntimeException {
     private String errCode;

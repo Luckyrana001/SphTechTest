@@ -8,9 +8,12 @@ import com.sphtech.application.common.DialogModel;
 import com.sphtech.application.common.LCEStatus;
 import com.sphtech.application.common.Logger;
 import com.sphtech.application.exception.ServiceRuntimeException;
+import com.sphtech.application.model.YearDataModel;
 import com.sphtech.application.services.IRemoteServices;
 
-public class MobileUsageViewModel  extends ViewModel {
+import java.util.ArrayList;
+
+public class MobileUsageViewModel extends ViewModel {
     private IRemoteServices mRemoteServices;
 
 
@@ -18,15 +21,13 @@ public class MobileUsageViewModel  extends ViewModel {
     private MutableLiveData<String> prompt = new MutableLiveData<>();
     private MutableLiveData<String> mlWarningStatus = new MutableLiveData<>();
     private MutableLiveData<DialogModel> mlDialog = new MutableLiveData<>();
-    private MutableLiveData<String> mlTotalDataConsumption = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mlisThereDecreaseInQuaterlyConsumption = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<YearDataModel>> mlYearlyDataConsumption = new MutableLiveData<>();
 
 
-    public MobileUsageViewModel( IRemoteServices rservice) {
+    public MobileUsageViewModel(IRemoteServices rservice) {
 
         Logger.d("vm constructor");
         mRemoteServices = rservice;
-
 
 
         mRemoteServices
@@ -36,9 +37,9 @@ public class MobileUsageViewModel  extends ViewModel {
                 .subscribe(result -> {
                     Logger.d("Load Data Result =>" + result);
                     mlWarningStatus.postValue("Data Loaded Successfuly.");
-                    mlTotalDataConsumption.setValue(result.getTotalDataConsumption());
-                    mlisThereDecreaseInQuaterlyConsumption.postValue(result.isThereDecreaseInVolumeOfData());
-                    //Toast.makeText(this,new Gson().toJson(result),Toast.LENGTH_LONG).show();
+
+                    mlYearlyDataConsumption.setValue(result.getYearlyData());
+
 
                 }, throwable -> {
 
@@ -57,19 +58,9 @@ public class MobileUsageViewModel  extends ViewModel {
     }
 
 
-
     public LiveData<LCEStatus> getLceStatus() {
         return mlLceStatus;
     }
-
-    public LiveData<Boolean> isThereDecreaseInQuaterlyConsumption() {
-        return mlisThereDecreaseInQuaterlyConsumption;
-    }
-
-    public LiveData<String> getTotalDataConsumption() {
-        return mlTotalDataConsumption;
-    }
-
 
     public LiveData<String> getPrompt() {
         return prompt;
@@ -81,5 +72,10 @@ public class MobileUsageViewModel  extends ViewModel {
 
     public LiveData<DialogModel> getDialog() {
         return mlDialog;
+    }
+
+
+    public LiveData<ArrayList<YearDataModel>> getMobileDataUsageData() {
+        return mlYearlyDataConsumption;
     }
 }

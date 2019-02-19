@@ -16,15 +16,11 @@ public interface MobileDataUsageRestService {
     Call<MobileDataUsageResponse> getMobileDataUsage();
 
 
-
     @GET("datastore_search")
     Call<MobileDataUsageResponse> getMobileDataUsage(
             @Query("resource_id") String resourceId,
             @Query("limit") String limit
-            // @Query("author") String author,
-            // @Query("published_at") Date date,
+
     );
-    //@FormUrlEncoded
-    // void getMobileDataUsage(@FieldMap Map<String, String> params, Callback<MobileDataUsageResponse> cb);
+
 }
-    //void getPositionByZip(@FieldMap Map<String, String> params, Callback<String> cb);

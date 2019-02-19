@@ -38,5 +38,5 @@ public class ErrorResponseModel {
         this.fieldErrors = fieldErrors;
     }
 
-    String errorCode , errorDescription,displayErrorMessage,fieldErrors;
+    String errorCode, errorDescription, displayErrorMessage, fieldErrors;
 }

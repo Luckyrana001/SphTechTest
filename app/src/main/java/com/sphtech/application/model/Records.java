@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties
 public class Records {
-    public Records(){
+    public Records() {
     }
 
     public Double getVolumeOfMobileData() {
@@ -19,10 +19,9 @@ public class Records {
     @JsonProperty("volume_of_mobile_data")
     Double volumeOfMobileData;
     @JsonProperty("quarter")
-    String  quarter;
+    String quarter;
     @JsonProperty("_id")
-    Integer  recordId;
-
+    Integer recordId;
 
 
     public String getQuarter() {
@@ -40,7 +39,6 @@ public class Records {
     public void setRecordId(Integer recordId) {
         this.recordId = recordId;
     }
-
 
 
 }

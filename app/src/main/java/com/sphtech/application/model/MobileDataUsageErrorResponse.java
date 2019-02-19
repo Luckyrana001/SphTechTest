@@ -1,7 +1,6 @@
 package com.sphtech.application.model;
 
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -9,10 +8,6 @@ import java.util.List;
 
 
 public class MobileDataUsageErrorResponse {
-
-
-
-
 
 
     @JsonProperty("help")
@@ -37,7 +32,7 @@ public class MobileDataUsageErrorResponse {
     }
 
     @JsonProperty("error")
-    public  Error error;
+    public Error error;
 
 
     public Error getError() {
@@ -48,8 +43,7 @@ public class MobileDataUsageErrorResponse {
         this.error = error;
     }
 
-    class Error
-    {
+    class Error {
 
         @JsonProperty("__type")
         private String __type;
@@ -75,11 +69,7 @@ public class MobileDataUsageErrorResponse {
         }
 
 
-
     }
-
-
-
 
 
 }

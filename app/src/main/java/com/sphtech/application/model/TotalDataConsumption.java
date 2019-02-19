@@ -18,6 +18,7 @@ public class TotalDataConsumption {
     public void setQuaterDataVolume(ArrayList<String> quaterDataVolume) {
         this.quaterDataVolume = quaterDataVolume;
     }
+
     public String getTotalDataConsumption() {
         return totalDataConsumption;
     }

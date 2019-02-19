@@ -2,18 +2,13 @@ package com.sphtech.application.services;
 
 import android.content.Context;
 
-
 import com.sphtech.application.common.RequestType;
 import com.sphtech.application.exception.ServiceRuntimeException;
 import com.sphtech.application.model.ErrorResponseModel;
-import com.sphtech.application.model.TotalDataConsumption;
+import com.sphtech.application.model.MobileDataConsumptionYearlyModel;
 
 import io.reactivex.Observable;
 
-
-/**
- * Created by Thet Paing Tun on 2/2/2018.
- */
 
 public class RemoteServices implements IRemoteServices {
 
@@ -23,16 +18,17 @@ public class RemoteServices implements IRemoteServices {
         this.mContext = mContext;
 
 
- }
+    }
 
     @Override
-    public Observable<TotalDataConsumption> getMobileDataUsage(String text) {
+    public Observable<MobileDataConsumptionYearlyModel> getMobileDataUsage(String text) {
 
         return Observable.create(emitter -> {
             RequestHandler.getRequestHandler()
                     .getMobileUsageDataRequest(responseArgs -> {
                         if (responseArgs.requestType == RequestType.getMobileDataUsage) {
-                            TotalDataConsumption response = (TotalDataConsumption) responseArgs.args;
+                            MobileDataConsumptionYearlyModel response = (MobileDataConsumptionYearlyModel) responseArgs.args;
+
 
                             emitter.onNext(response);
                             emitter.onComplete();
@@ -43,10 +39,10 @@ public class RemoteServices implements IRemoteServices {
                                 ServiceRuntimeException ex = new ServiceRuntimeException("0", "Unknown Error");
                                 emitter.onError(ex);
                             } else {
-                                if(errModel.getDisplayErrorMessage()!=null && !errModel.getDisplayErrorMessage().equals("")){
+                                if (errModel.getDisplayErrorMessage() != null && !errModel.getDisplayErrorMessage().equals("")) {
                                     ServiceRuntimeException ex = new ServiceRuntimeException(errModel.getErrorCode(), errModel.getDisplayErrorMessage());
                                     emitter.onError(ex);
-                                }else{
+                                } else {
                                     ServiceRuntimeException ex = new ServiceRuntimeException(errModel.getErrorCode(), errModel.getErrorDescription());
                                     emitter.onError(ex);
                                 }

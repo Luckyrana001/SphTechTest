@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties
-public class MobileDataUsageResponse  {
-    public MobileDataUsageResponse(){
+public class MobileDataUsageResponse {
+    public MobileDataUsageResponse() {
 
     }
 
@@ -15,7 +15,6 @@ public class MobileDataUsageResponse  {
 
     @JsonProperty("success")
     boolean success;
-
 
 
     @JsonProperty("result")
@@ -45,17 +44,6 @@ public class MobileDataUsageResponse  {
     public void setResult(Result result) {
         this.result = result;
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

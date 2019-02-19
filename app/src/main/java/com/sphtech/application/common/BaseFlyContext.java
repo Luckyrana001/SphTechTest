@@ -12,14 +12,18 @@ public class BaseFlyContext {
 
     private static BaseFlyContext flyContext;
     private Context context;
-    private Activity currentActivity ;
+    private Activity currentActivity;
     public static String responce;
     private Resources resources;
-    private BaseFlyContext(){};
 
-    public static BaseFlyContext getInstant(){
+    private BaseFlyContext() {
+    }
 
-        if(flyContext == null){
+    ;
+
+    public static BaseFlyContext getInstant() {
+
+        if (flyContext == null) {
             flyContext = new BaseFlyContext();
         }
         return flyContext;
@@ -27,23 +31,26 @@ public class BaseFlyContext {
 
     /**
      * return current application context
+     *
      * @return context
      */
-    public Context getApplicationContext(){
+    public Context getApplicationContext() {
         return context;
     }
 
     /**
      * return current Activity instant
+     *
      * @return currentActivity
      */
-    public Activity getActivity(){
+    public Activity getActivity() {
 
         return currentActivity;
     }
 
     /**
      * return resources object
+     *
      * @return resources
      */
     public Resources getResources() {
@@ -52,6 +59,7 @@ public class BaseFlyContext {
 
     /**
      * set resources object
+     *
      * @param resources
      */
     public void setResources(Resources resources) {
@@ -60,9 +68,10 @@ public class BaseFlyContext {
 
     /**
      * set current Activity instant
+     *
      * @param a
      */
-    public void setActivity(Activity a){
+    public void setActivity(Activity a) {
 
         currentActivity = a;
         setResources(a.getResources());
@@ -71,9 +80,10 @@ public class BaseFlyContext {
 
     /**
      * set ApplicationContext object
+     *
      * @param c
      */
-    public void setApplicationContext(Context c){
+    public void setApplicationContext(Context c) {
         context = c;
     }
 }

@@ -7,14 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Fields {
 
 
-    public Fields(){
+    public Fields() {
 
     }
 
     @JsonProperty("type")
     String type;
     @JsonProperty("id")
-    String  id;
+    String id;
+
     public String getType() {
         return type;
     }

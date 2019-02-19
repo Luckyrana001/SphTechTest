@@ -5,15 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties
 public class Links {
-    public Links(){
+    public Links() {
 
     }
+
     @JsonProperty("start")
     String start;
     @JsonProperty("prev")
-    String  prev;
+    String prev;
     @JsonProperty("next")
-    String  next;
+    String next;
 
     public String getStart() {
         return start;

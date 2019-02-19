@@ -12,12 +12,12 @@ import okhttp3.Response;
 public class Utils {
     Context context;
 
-    public Utils(Context context){
+    public Utils(Context context) {
         this.context = context;
     }
 
 
-    public  final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+    public final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Response originalResponse = chain.proceed(chain.request());
@@ -37,7 +37,7 @@ public class Utils {
 
 
     public boolean isNetworkAvailable() {
-        ConnectivityManager connectivity = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity == null) {
             return false;
         } else {
@@ -52,5 +52,21 @@ public class Utils {
         }
         return false;
     }
+
+
+    public static String getYear(String data) {
+        String year = "";
+        String[] separated = data.split("-");
+        year = separated[0];
+        return year;
+    }
+
+    public static String getQuater(String data) {
+        String quaterName = "";
+        String[] separated = data.split("-");
+        quaterName = separated[1];
+        return quaterName;
+    }
+
 
 }
