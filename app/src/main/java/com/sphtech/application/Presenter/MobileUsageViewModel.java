@@ -30,6 +30,13 @@ public class MobileUsageViewModel extends ViewModel {
         mRemoteServices = rservice;
 
 
+        getDataFromAPiOrCache();
+
+
+
+    }
+
+    public void getDataFromAPiOrCache() {
         mRemoteServices
                 .getMobileDataUsage("adf")
                 .doOnSubscribe(disposable -> LCEStatus.loading("Loading Mobile Usage Data ..."))
@@ -37,7 +44,6 @@ public class MobileUsageViewModel extends ViewModel {
                 .subscribe(result -> {
                     Logger.d("Load Data Result =>" + result);
                     mlWarningStatus.postValue("Data Loaded Successfuly.");
-
                     mlYearlyDataConsumption.setValue(result.getYearlyData());
 
 
@@ -54,7 +60,6 @@ public class MobileUsageViewModel extends ViewModel {
 
                     Logger.d("verify device id error =>" + throwable.getMessage());
                 });
-
     }
 
 

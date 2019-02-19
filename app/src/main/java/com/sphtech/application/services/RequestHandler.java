@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sphtech.application.BuildConfig;
 import com.sphtech.application.MobileDataUsageConstants;
 import com.sphtech.application.MobileDataUsageRestService;
 import com.sphtech.application.common.BaseFlyContext;
@@ -18,22 +19,32 @@ import com.sphtech.application.model.MobileDataUsageResponse;
 import com.sphtech.application.model.QuaterDataModel;
 import com.sphtech.application.model.Records;
 import com.sphtech.application.model.YearDataModel;
-import com.squareup.okhttp.Cache;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.CacheControl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import static com.sphtech.application.MobileDataUsageConstants.START_REQUEST;
+import static okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS;
+import static okhttp3.logging.HttpLoggingInterceptor.Level.NONE;
 
 public class RequestHandler {
     private static final String TAG = RequestHandler.class.getName();
@@ -45,51 +56,56 @@ public class RequestHandler {
     private Retrofit retrofit;
     private MobileDataUsageRestService service;
 
-    private long cacheSize = 5 * 1024 * 1024;
-    Cache myCache = new Cache(BaseFlyContext.getInstant().getApplicationContext().getCacheDir(), cacheSize);
-
+   // private long cacheSize = 10 * 1024 * 1024;
+    //Cache myCache = new Cache(BaseFlyContext.getInstant().getApplicationContext().getCacheDir(), cacheSize);
+   public static  File httpCacheDirectory = new File(BaseFlyContext.getInstant().getApplicationContext().getCacheDir(), "responses");
+    public static int cacheSize = 10 * 1024 * 1024; // 10 MiB
+    public static Cache cache = new Cache(httpCacheDirectory, cacheSize);
+    public static Utils utils;
 
     public RequestHandler() {
 
 
         try {
-           /* Utils utils = new Utils(BaseFlyContext.getInstant().getApplicationContext());
+             utils = new Utils(BaseFlyContext.getInstant().getApplicationContext());
 
-            OkHttpClient client = new OkHttpClient();
-            client.networkInterceptors().add(utils.REWRITE_CACHE_CONTROL_INTERCEPTOR);
-
-            //setup cache
-            File httpCacheDirectory = new File(BaseFlyContext.getInstant().getApplicationContext().getCacheDir(), "responses");
-            int cacheSize = 10 * 1024 * 1024; // 10 MiB
-            Cache cache = new Cache(httpCacheDirectory, cacheSize);
-
-             //add cache to the client
-            client.setCache(cache);
-
-*/
+           /* OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor( utils.REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                    .addNetworkInterceptor(utils.REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                    .cache(cache)
+                    .build();
 
 
-            OkHttpClient client = new OkHttpClient();
-            // client.interceptors().add(new LoggingInterceptor());
             retrofit = new Retrofit.Builder()
                     .baseUrl(MobileDataUsageConstants.BASE_URL)
                     .addConverterFactory(JacksonConverterFactory.create())
                     .client(client)
+                    .build();*/
+
+
+          retrofit =  new Retrofit.Builder()
+                    .baseUrl( MobileDataUsageConstants.BASE_URL )
+                    .client( provideOkHttpClient() )
+                    .addConverterFactory(JacksonConverterFactory.create() )
                     .build();
             service = retrofit.create(MobileDataUsageRestService.class);
 
 
 
-
-
-
-           /* queue = Volley.newRequestQueue(BaseFlyContext.getInstant().getApplicationContext());
-            //gson = new GsonBuilder().create();
-            gson = new GsonBuilder().setPrettyPrinting().create();*/
         } catch (Exception e) {
             Log.e("RequestHandler except", e + "");
         }
     }
+    private  OkHttpClient provideOkHttpClient ()
+    {
+        return new OkHttpClient.Builder()
+                .addInterceptor( utils.provideHttpLoggingInterceptor() )
+                .addInterceptor( utils.provideOfflineCacheInterceptor() )
+                .addNetworkInterceptor(utils. provideCacheInterceptor() )
+                .cache( utils.provideCache() )
+                .build();
+    }
+
 
     public static RequestHandler getRequestHandler() {
 
@@ -117,31 +133,31 @@ public class RequestHandler {
                     ArrayList<QuaterDataModel> quaterDataModelArrayList = new ArrayList<QuaterDataModel>();
                     String yearName = "";
 
-                    for (int i = 0; i < records.size(); i++) {
+                    for(int i=0;i<records.size();i++){
                         Records record = records.get(i);
-                        String recYear = Utils.getYear(record.getQuarter());
-                        String recQuater = Utils.getQuater(record.getQuarter());
+                        String  recYear = Utils.getYear(record.getQuarter());
+                        String  recQuater = Utils.getQuater(record.getQuarter());
                         Double dataConsumed = record.getVolumeOfMobileData();
-                        YearDataModel yearDataModel = new YearDataModel();
+                        YearDataModel   yearDataModel = new YearDataModel();
 
 
-                        if (Integer.parseInt(recYear) >= 2008) {
-                            if (yearName.equals("")) {
-                                yearName = recYear;
+                        if(Integer.parseInt(recYear)>=2008) {
+                            if(yearName.equals("")){
+                                yearName  =   recYear;
                             }
 
 
-                            if (yearName.equals(recYear)) {
+                            if(yearName.equals(recYear)){
                                 QuaterDataModel quaterDataModel = new QuaterDataModel();
                                 quaterDataModel.setQuaterName(recQuater);
                                 quaterDataModel.setDataConsumption(dataConsumed);
                                 quaterDataModelArrayList.add(quaterDataModel);
                                 yearDataModel.setYear(yearName);
-                                if (i == (records.size() - 1)) {
+                                if(i==(records.size()-1)){
 
                                     // calculate total data consumption
                                     Double totalDataConumption = 0.0;
-                                    for (QuaterDataModel dataModel : quaterDataModelArrayList) {
+                                    for(QuaterDataModel dataModel:quaterDataModelArrayList){
                                         totalDataConumption = totalDataConumption + dataModel.getDataConsumption();
                                     }
                                     // verifying if any quarter in a year demonstrates a decrease in volume data.
@@ -160,7 +176,7 @@ public class RequestHandler {
 
                                 // calculate total data consumption
                                 Double totalDataConumption = 0.0;
-                                for (QuaterDataModel quaterDataModel : quaterDataModelArrayList) {
+                                for(QuaterDataModel quaterDataModel:quaterDataModelArrayList){
                                     totalDataConumption = totalDataConumption + quaterDataModel.getDataConsumption();
                                 }
 
@@ -172,15 +188,15 @@ public class RequestHandler {
                                 yearDataModel.setTotalYearlyataConsumption(totalDataConumption);
                                 yearDataModel.setQuaterlyData(quaterDataModelArrayList);
                                 yearDataModelArrayList.add(yearDataModel);
-                                quaterDataModelArrayList = new ArrayList<QuaterDataModel>();
+                                quaterDataModelArrayList= new ArrayList<QuaterDataModel>();
                                 yearName = recYear;
 
-                                QuaterDataModel quaterDataModel = new QuaterDataModel();
+                                QuaterDataModel  quaterDataModel = new QuaterDataModel();
                                 quaterDataModel.setQuaterName(recQuater);
                                 quaterDataModel.setDataConsumption(dataConsumed);
                                 quaterDataModelArrayList.add(quaterDataModel);
 
-                                if (i == (records.size() - 1)) {
+                                if(i==(records.size()-1)){
                                     yearDataModel.setYear(yearName);
                                     yearDataModel.setQuaterlyData(quaterDataModelArrayList);
                                     yearDataModelArrayList.add(yearDataModel);
@@ -196,7 +212,7 @@ public class RequestHandler {
                     }
 
 
-                    Log.i("formattedData", new Gson().toJson(mobileDataConsumptionYearlyModel) + "");
+                    Log.i("formattedData", new Gson().toJson(mobileDataConsumptionYearlyModel)+"");
 
                     Type type = new TypeToken<MobileDataConsumptionYearlyModel>() {
                     }.getType();
@@ -235,26 +251,28 @@ public class RequestHandler {
 
     private boolean getIsDataVolumeDecreaseFound(ArrayList<QuaterDataModel> quaterDataModelArrayList) {
         boolean isDataVolumeDecreaseFound = false;
-        if (quaterDataModelArrayList.size() == 2) {
+        if(quaterDataModelArrayList.size()==2){
             Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
             Double Q2Volume = quaterDataModelArrayList.get(0).getDataConsumption();
-            if (Q1Volume > Q2Volume) {
+            if(Q1Volume>Q2Volume){
                 isDataVolumeDecreaseFound = true;
             }
-        } else if (quaterDataModelArrayList.size() == 3) {
+        }
+        else if(quaterDataModelArrayList.size()==3){
             Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
             Double Q2Volume = quaterDataModelArrayList.get(1).getDataConsumption();
             Double Q3Volume = quaterDataModelArrayList.get(2).getDataConsumption();
-            if (Q1Volume > Q2Volume || Q2Volume > Q3Volume) {
+            if(Q1Volume>Q2Volume || Q2Volume>Q3Volume){
                 isDataVolumeDecreaseFound = true;
             }
-        } else if (quaterDataModelArrayList.size() == 4) {
+        }
+        else if(quaterDataModelArrayList.size()==4){
             Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
             Double Q2Volume = quaterDataModelArrayList.get(1).getDataConsumption();
             Double Q3Volume = quaterDataModelArrayList.get(2).getDataConsumption();
             Double Q4Volume = quaterDataModelArrayList.get(3).getDataConsumption();
 
-            if (Q1Volume > Q2Volume || Q2Volume > Q3Volume || Q3Volume > Q4Volume) {
+            if(Q1Volume>Q2Volume || Q2Volume>Q3Volume || Q3Volume>Q4Volume){
                 isDataVolumeDecreaseFound = true;
             }
         }

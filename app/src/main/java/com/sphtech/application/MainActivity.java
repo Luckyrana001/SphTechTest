@@ -1,8 +1,12 @@
 package com.sphtech.application;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
     RecyclerView mdContentRecyclerView;
 
     ArrayList<YearDataModel> yearDataModels;
+    private static final int REQUEST_STORAGE = 112;
 
     private static final String TAG = "MainActivity";
 
@@ -58,10 +63,30 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
         yearDataModels = new ArrayList<>();
 
         setupRecylerView();
-
+        requestPermissionForExternalStorage();
 
     }
+    public void requestPermissionForExternalStorage() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(this, "External Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
 
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    mobileUsageViewModel.getDataFromAPiOrCache();
+                }
+            }
+        }
+    }
 
     private void setupRecylerView() {
 
