@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sphtech.application.BuildConfig;
 import com.sphtech.application.MobileDataUsageConstants;
 import com.sphtech.application.MobileDataUsageRestService;
 import com.sphtech.application.common.BaseFlyContext;
@@ -21,30 +20,21 @@ import com.sphtech.application.model.Records;
 import com.sphtech.application.model.YearDataModel;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
-import okhttp3.CacheControl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import static com.sphtech.application.MobileDataUsageConstants.START_REQUEST;
-import static okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS;
-import static okhttp3.logging.HttpLoggingInterceptor.Level.NONE;
 
 public class RequestHandler {
     private static final String TAG = RequestHandler.class.getName();

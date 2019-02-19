@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         ButterKnife.bind(this);
         BaseFlyContext.getInstant().setActivity(this);
         IRemoteServices remoteServices = new RemoteServices(this);
@@ -61,31 +60,8 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
         mobileUsageViewModel = ViewModelProviders.of(this, postProvider).get(MobileUsageViewModel.class);
         setUpObservers();
         yearDataModels = new ArrayList<>();
-
         setupRecylerView();
-        requestPermissionForExternalStorage();
 
-    }
-    public void requestPermissionForExternalStorage() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "External Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
-
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    mobileUsageViewModel.getDataFromAPiOrCache();
-                }
-            }
-        }
     }
 
     private void setupRecylerView() {

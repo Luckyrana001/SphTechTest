@@ -48,6 +48,11 @@ dependencies {
     androidTestImplementation 'com.squareup.spoon:spoon-client:1.2.0'
     implementation "com.squareup.okhttp3:logging-interceptor:3.2.0"
 
+    // Room (use 1.1.0-alpha1 for latest alpha)
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+
+
     //Rxjava
     implementation "io.reactivex.rxjava2:rxjava:2.1.9"
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
