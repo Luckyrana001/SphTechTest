@@ -100,10 +100,10 @@ public class RequestHandler {
     }
 
 
-    public void getMobileUsageDataRequest(final IResponseReceivedNotifyInterface iResponseReceivedNotifyInterface, String text) {
+    public void getMobileUsageDataRequest(final IResponseReceivedNotifyInterface iResponseReceivedNotifyInterface, String url) {
 
 
-        Call<MobileDataUsageResponse> call = service.getMobileDataUsage(START_REQUEST);
+        Call<MobileDataUsageResponse> call = service.getMobileDataUsage(url);
         call.enqueue(new Callback<MobileDataUsageResponse>() {
             @Override
             public void onResponse(Call<MobileDataUsageResponse> call, Response<MobileDataUsageResponse> response) {
@@ -111,96 +111,14 @@ public class RequestHandler {
                     Log.e(TAG, response.toString());
 
 
-                    ArrayList<Records> records = response.body().getResult().getRecords();
-                    MobileDataConsumptionYearlyModel mobileDataConsumptionYearlyModel = new MobileDataConsumptionYearlyModel();
-                    ArrayList<YearDataModel> yearDataModelArrayList = new ArrayList<>();
-                    ArrayList<QuaterDataModel> quaterDataModelArrayList = new ArrayList<QuaterDataModel>();
-                    String yearName = "";
-
-                    for(int i=0;i<records.size();i++){
-                        Records record = records.get(i);
-                        String  recYear = Utils.getYear(record.getQuarter());
-                        String  recQuater = Utils.getQuater(record.getQuarter());
-                        Double dataConsumed = record.getVolumeOfMobileData();
-                        YearDataModel   yearDataModel = new YearDataModel();
 
 
-                        if(Integer.parseInt(recYear)>=2008) {
-                            if(yearName.equals("")){
-                                yearName  =   recYear;
-                            }
 
+                    Log.i("formattedData", new Gson().toJson(response.body())+"");
 
-                            if(yearName.equals(recYear)){
-                                QuaterDataModel quaterDataModel = new QuaterDataModel();
-                                quaterDataModel.setQuaterName(recQuater);
-                                quaterDataModel.setDataConsumption(dataConsumed);
-                                quaterDataModelArrayList.add(quaterDataModel);
-                                yearDataModel.setYear(yearName);
-                                if(i==(records.size()-1)){
-
-                                    // calculate total data consumption
-                                    Double totalDataConumption = 0.0;
-                                    for(QuaterDataModel dataModel:quaterDataModelArrayList){
-                                        totalDataConumption = totalDataConumption + dataModel.getDataConsumption();
-                                    }
-                                    // verifying if any quarter in a year demonstrates a decrease in volume data.
-                                    boolean isDataVolumeDecreaseFound = getIsDataVolumeDecreaseFound(quaterDataModelArrayList);
-                                    yearDataModel.setTotalYearlyataConsumption(totalDataConumption);
-                                    yearDataModel.setIsthereDecreaseInVolume(isDataVolumeDecreaseFound);
-                                    yearDataModel.setQuaterlyData(quaterDataModelArrayList);
-                                    yearDataModelArrayList.add(yearDataModel);
-                                    mobileDataConsumptionYearlyModel.setYearlyData(yearDataModelArrayList);
-
-                                }
-
-
-                            } else {
-
-
-                                // calculate total data consumption
-                                Double totalDataConumption = 0.0;
-                                for(QuaterDataModel quaterDataModel:quaterDataModelArrayList){
-                                    totalDataConumption = totalDataConumption + quaterDataModel.getDataConsumption();
-                                }
-
-                                // verifying if any quarter in a year demonstrates a decrease in volume data.
-                                boolean isDataVolumeDecreaseFound = getIsDataVolumeDecreaseFound(quaterDataModelArrayList);
-                                // updating Yearly data model
-                                yearDataModel.setIsthereDecreaseInVolume(isDataVolumeDecreaseFound);
-                                yearDataModel.setYear(yearName);
-                                yearDataModel.setTotalYearlyataConsumption(totalDataConumption);
-                                yearDataModel.setQuaterlyData(quaterDataModelArrayList);
-                                yearDataModelArrayList.add(yearDataModel);
-                                quaterDataModelArrayList= new ArrayList<QuaterDataModel>();
-                                yearName = recYear;
-
-                                QuaterDataModel  quaterDataModel = new QuaterDataModel();
-                                quaterDataModel.setQuaterName(recQuater);
-                                quaterDataModel.setDataConsumption(dataConsumed);
-                                quaterDataModelArrayList.add(quaterDataModel);
-
-                                if(i==(records.size()-1)){
-                                    yearDataModel.setYear(yearName);
-                                    yearDataModel.setQuaterlyData(quaterDataModelArrayList);
-                                    yearDataModelArrayList.add(yearDataModel);
-                                    mobileDataConsumptionYearlyModel.setYearlyData(yearDataModelArrayList);
-
-                                }
-
-
-                            }
-
-                        }
-
-                    }
-
-
-                    Log.i("formattedData", new Gson().toJson(mobileDataConsumptionYearlyModel)+"");
-
-                    Type type = new TypeToken<MobileDataConsumptionYearlyModel>() {
+                    Type type = new TypeToken<MobileDataUsageResponse>() {
                     }.getType();
-                    iResponseReceivedNotifyInterface.responseReceived(new ResponseArgs(mobileDataConsumptionYearlyModel, ResponseStatus.success, RequestType.getMobileDataUsage));
+                    iResponseReceivedNotifyInterface.responseReceived(new ResponseArgs(response.body(), ResponseStatus.success, RequestType.getMobileDataUsage));
 
 
                 } else {
@@ -231,36 +149,6 @@ public class RequestHandler {
                 Log.e(TAG, t.toString());
             }
         });
-    }
-
-    private boolean getIsDataVolumeDecreaseFound(ArrayList<QuaterDataModel> quaterDataModelArrayList) {
-        boolean isDataVolumeDecreaseFound = false;
-        if(quaterDataModelArrayList.size()==2){
-            Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
-            Double Q2Volume = quaterDataModelArrayList.get(0).getDataConsumption();
-            if(Q1Volume>Q2Volume){
-                isDataVolumeDecreaseFound = true;
-            }
-        }
-        else if(quaterDataModelArrayList.size()==3){
-            Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
-            Double Q2Volume = quaterDataModelArrayList.get(1).getDataConsumption();
-            Double Q3Volume = quaterDataModelArrayList.get(2).getDataConsumption();
-            if(Q1Volume>Q2Volume || Q2Volume>Q3Volume){
-                isDataVolumeDecreaseFound = true;
-            }
-        }
-        else if(quaterDataModelArrayList.size()==4){
-            Double Q1Volume = quaterDataModelArrayList.get(0).getDataConsumption();
-            Double Q2Volume = quaterDataModelArrayList.get(1).getDataConsumption();
-            Double Q3Volume = quaterDataModelArrayList.get(2).getDataConsumption();
-            Double Q4Volume = quaterDataModelArrayList.get(3).getDataConsumption();
-
-            if(Q1Volume>Q2Volume || Q2Volume>Q3Volume || Q3Volume>Q4Volume){
-                isDataVolumeDecreaseFound = true;
-            }
-        }
-        return isDataVolumeDecreaseFound;
     }
 
 

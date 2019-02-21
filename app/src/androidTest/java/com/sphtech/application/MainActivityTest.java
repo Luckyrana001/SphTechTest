@@ -22,10 +22,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-/**
- * @author rebeccafranks
- * @since 15/10/25.
- */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
@@ -39,10 +35,8 @@ public class MainActivityTest {
     public void setUp() throws Exception {
 
         InstrumentationRegistry.getInstrumentation();
-       // super.setUp();
         server = new MockWebServer();
         server.start();
-        //InstrumentationRegistry.getInstrumentation();
         MobileDataUsageConstants.BASE_URL = server.url("/").toString();
     }
 
@@ -57,27 +51,20 @@ public class MainActivityTest {
         mActivityRule.launchActivity(intent);
 
         onView(withId(R.id.button_retry)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-       // onView(withText("I came from a real tough neighborhood. Once a guy pulled a knife on me. I knew he wasn't a professional, the knife had butter on it.")).check(matches(isDisplayed()));
 
     }
 
 
-   /* @Test
-    public void testFailedQuoteRetrieval() throws Exception {
 
-        QuoteOfTheDayMockAdapterTest quoteOfTheDayMockAdapterTest = new QuoteOfTheDayMockAdapterTest();
-        quoteOfTheDayMockAdapterTest.testFailedQuoteRetrieval();
-    }
-
-    @Test
+     @Test
     public void testRandomQuoteRetrieval() throws Exception {
 
-        QuoteOfTheDayMockAdapterTest quoteOfTheDayMockAdapterTest = new QuoteOfTheDayMockAdapterTest();
+        MockAdapterTest quoteOfTheDayMockAdapterTest = new MockAdapterTest();
         quoteOfTheDayMockAdapterTest.testRandomQuoteRetrieval();
-    }*/
+    }
     @Test
     public void testRetryButtonShowsWhenError() throws Exception {
-        String fileName = "quote_404_not_found.json";
+        String fileName = "mobile_data_usage_404_not_found.json";
 
         server.enqueue(new MockResponse()
                 .setResponseCode(404)
@@ -86,8 +73,6 @@ public class MainActivityTest {
         Intent intent = new Intent();
         mActivityRule.launchActivity(intent);
 
-       // onView(withId(R.id.button_retry)).check(matches(isDisplayed()));
-       // onView(withText("Quote Not found")).check(matches(isDisplayed()));
     }
 
     @After

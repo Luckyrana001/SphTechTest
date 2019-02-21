@@ -85,7 +85,7 @@ public class Utils {
         try
         {
             cache = new Cache( new File( BaseFlyContext.getInstant().getApplicationContext().getCacheDir(), "http-cache" ),
-                    10 * 1024 * 1024 ); // 10 MB
+                    10485760 ); // 10 MB
         }
         catch (Exception e)
         {

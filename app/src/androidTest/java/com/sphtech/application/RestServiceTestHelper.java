@@ -6,10 +6,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * @author rebeccafranks
- * @since 15/10/24.
- */
 public class RestServiceTestHelper {
 
     public static String convertStreamToString(InputStream is) throws Exception {

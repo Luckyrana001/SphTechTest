@@ -5,7 +5,7 @@ import android.content.Context;
 import com.sphtech.application.common.RequestType;
 import com.sphtech.application.exception.ServiceRuntimeException;
 import com.sphtech.application.model.ErrorResponseModel;
-import com.sphtech.application.model.MobileDataConsumptionYearlyModel;
+import com.sphtech.application.model.MobileDataUsageResponse;
 
 import io.reactivex.Observable;
 
@@ -21,13 +21,13 @@ public class RemoteServices implements IRemoteServices {
     }
 
     @Override
-    public Observable<MobileDataConsumptionYearlyModel> getMobileDataUsage(String text) {
+    public Observable<MobileDataUsageResponse> getMobileDataUsage(String url) {
 
         return Observable.create(emitter -> {
             RequestHandler.getRequestHandler()
                     .getMobileUsageDataRequest(responseArgs -> {
                         if (responseArgs.requestType == RequestType.getMobileDataUsage) {
-                            MobileDataConsumptionYearlyModel response = (MobileDataConsumptionYearlyModel) responseArgs.args;
+                            MobileDataUsageResponse response = (MobileDataUsageResponse) responseArgs.args;
 
 
                             emitter.onNext(response);
@@ -49,7 +49,7 @@ public class RemoteServices implements IRemoteServices {
                             }
 
                         }
-                    }, text);
+                    }, url);
         });
     }
 }

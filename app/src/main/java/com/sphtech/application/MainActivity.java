@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
 
     private void updateDataset(ArrayList<YearDataModel> mobileUsageViewModels) {
 
-        yearDataModels = new ArrayList<>();
+        yearDataModels.clear();
         yearDataModels.addAll(mobileUsageViewModels);
         mobileUsageDataAdapter.notifyDataSetChanged();
     }
