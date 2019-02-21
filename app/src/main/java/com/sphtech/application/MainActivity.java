@@ -1,6 +1,5 @@
 package com.sphtech.application;
 
-import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,7 +29,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements ImageClickedListener {
-    private ProgressDialog mProgressDialog;
     private MaterialDialog errorDialog;
     private MaterialDialog mDialog;
     private MobileUsageDataAdapter mobileUsageDataAdapter;
@@ -41,9 +39,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
     RecyclerView mdContentRecyclerView;
 
     ArrayList<YearDataModel> yearDataModels;
-    private static final int REQUEST_STORAGE = 112;
 
-    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-        setupProgressBar();
         BaseFlyContext.getInstant().setActivity(this);
         IRemoteServices remoteServices = new RemoteServices(this);
         MobileUsageViewModelProvider postProvider = new MobileUsageViewModelProvider(remoteServices);
@@ -65,13 +60,10 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
 
     private void setUpPullToRefreshLayout() {
          mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-               // Refresh items
-                    mobileUsageViewModel.getDataFromAPiOrCacheOrFromDb();
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+           // Refresh items
+                mobileUsageViewModel.getDataFromAPiOrCacheOrFromDb();
 
-            }
         });
         // Configure the refreshing colors
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -118,24 +110,12 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
 
     private void updateDataset(ArrayList<YearDataModel> mobileUsageViewModels) {
 
+        yearDataModels = new ArrayList<>();
         yearDataModels.addAll(mobileUsageViewModels);
         mobileUsageDataAdapter.notifyDataSetChanged();
     }
 
-    private void showProgress(boolean showed, String msg) {
-        if (showed) {
-            if (!mProgressDialog.isShowing()) {
-                if (!msg.equals("")) {
-                    mProgressDialog.setMessage(msg);
-                }
-                mProgressDialog.show();
-            }
-        } else {
-            if (mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
-            }
-        }
-    }
+
 
     public void showToast(String message) {
         mSwipeRefreshLayout.setRefreshing(false);
@@ -143,22 +123,18 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
     }
 
 
-    private void setupProgressBar() {
-        mProgressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
-        mProgressDialog.setMessage(getResources().getString(R.string.processing));
-        mProgressDialog.setCancelable(true);
-    }
+
 
     private void showLceStatus(LCEStatus status) {
         if (status.getStatus() == LCEStatus.Status.SUCCESS) {
             mSwipeRefreshLayout.setRefreshing(false);
-            showProgress(false, "");
+
         } else if (status.getStatus() == LCEStatus.Status.ERROR) {
             mSwipeRefreshLayout.setRefreshing(false);
             showErrorAlertDialog(status.getTitle(), status.getMsg());
         } else if (status.getStatus() == LCEStatus.Status.LOADING) {
             mSwipeRefreshLayout.setRefreshing(false);
-            showProgress(true, status.getMsg());
+
         }
     }
 
@@ -167,9 +143,6 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
             errorDialog.dismiss();
         }
 
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
 
         errorDialog = new MaterialDialog.Builder(this)
                 .title(title)
@@ -192,12 +165,8 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
                     .content(dialogModel.getContent())
                     .positiveText(dialogModel.getPositiveBtnText())
                     .negativeText(dialogModel.getNegBtnText())
-                    .onPositive((dialog, which) -> {
-                        dialogModel.getOnPositiveBtnClicked().onclicked();
-                    })
-                    .onNegative(((dialog, which) -> {
-                        dialogModel.getOnNegativeBtnClicked().onClicked();
-                    }))
+                    .onPositive((dialog, which) -> dialogModel.getOnPositiveBtnClicked().onclicked())
+                    .onNegative(((dialog, which) -> dialogModel.getOnNegativeBtnClicked().onClicked()))
                     .build();
 
             mDialog.show();

@@ -16,7 +16,7 @@ public class MainActivityExpressoItemCountTest {
 
     @Test
     public void ensureTextChangesWork() throws InterruptedException {
-        Thread.sleep(1000);
+        //Thread.sleep(1000);
         if (getRVcount() > 0){
             System.out.print("Total Items"+getRVcount());
         }else{

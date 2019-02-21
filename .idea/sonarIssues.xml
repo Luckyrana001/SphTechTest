@@ -8,6 +8,81 @@
             <set />
           </value>
         </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/androidTest/java/com/ytlcomms/ymca/LoginEspressoTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/androidTest/java/com/ytlcomms/ymca/MainActivityTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/androidTest/java/com/ytlcomms/ymca/MnpExpressoTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/debug/res/values/google_maps_api.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/main/AndroidManifest.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/main/assets/www/PaymentConfirmationPage_New.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/main/assets/www/select_simplifiedTax.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/main/assets/www/selected_receipt.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/main/assets/www/signHtml.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/main/assets/www/simplifiedTax.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/main/java/com/xchanging/alogcat/Logcat.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/main/java/com/xchanging/realm/GetPostcodeList.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/app/src/release/res/values/google_maps_api.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/YTLC Project/Ytlc-Ymca copy 2/readme.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$USER_HOME$/Documents/AndroidStudio/DeviceExplorer/oppo-cph1819-45GIF6QOOF6DLZDY/data/data/com.sphtech.application/cache/http-cache/d3fbefadbe61899e56927bd1db1b7b64.0">
           <value>
             <set />
@@ -18,12 +93,102 @@
             <set />
           </value>
         </entry>
+        <entry key="$USER_HOME$/Downloads/RetrofitRxJavaMockServerExample-master/app/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/RetrofitRxJavaMockServerExample-master/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/RetrofitRxJavaMockServerExample-master/app/src/main/res/values/simple_api_response_strings.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$USER_HOME$/Downloads/adept-android-retrofit2-cache/app/build.gradle">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$USER_HOME$/Downloads/adept-android-retrofit2-cache/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/androidTest/java/za/co/riggaroo/retrofittestexample/MainActivityTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/AndroidManifest.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/MobileDataUsageRestService.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/Presenter/MobileUsageViewModel.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/Presenter/MobileUsageViewModelProvider.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/adapter/MobileUsageDataAdapter.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/common/Utils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/db/AppDatabase.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/db/dao/RecordsDao.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/listener/ResponseArgs.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/services/IRemoteServices.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/services/RemoteServices.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/app/src/main/java/za/co/riggaroo/retrofittestexample/services/RequestHandler.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/android-retrofit-test-examples-master/RetrofitTestExample/build.gradle">
           <value>
             <set />
           </value>
@@ -39,6 +204,26 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/app/build/generated/source/apt/debug/com/sphtech/application/db/dao/UserDao_Impl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/androidTest/java/com/sphtech/application/MainActivityExpressoItemCountTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/androidTest/java/com/sphtech/application/MainActivityTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/androidTest/java/com/sphtech/application/MockFailedQODService.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/androidTest/java/com/sphtech/application/MyViewAction.java">
           <value>
             <set />
           </value>
@@ -214,6 +399,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/build.gradle">
           <value>
             <set />
           </value>

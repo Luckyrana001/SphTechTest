@@ -61,9 +61,9 @@ public class MobileUsageDataAdapter extends RecyclerView.Adapter<MobileUsageData
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public ImageView decreaseFoundinVolIv;
-        public TextView totalDataConsumptionTv;
-        public TextView yearNameTv;
+        private ImageView decreaseFoundinVolIv;
+        private TextView totalDataConsumptionTv;
+        private TextView yearNameTv;
 
 
         public MyViewHolder(View view) {

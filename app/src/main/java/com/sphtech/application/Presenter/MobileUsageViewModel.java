@@ -58,9 +58,8 @@ public class MobileUsageViewModel extends ViewModel {
             }
 
             @Override
-            protected void onPostExecute(Void agentsCount) {
-                //mlWarningStatus.setValue("table data iserted.");
-
+            protected void onPostExecute(Void result) {
+              System.out.print("Table data deleted");
             }
         }.execute();
     }
@@ -86,8 +85,7 @@ public class MobileUsageViewModel extends ViewModel {
             protected void onPostExecute(ArrayList<YearDataModel> getYearlyData) {
 
 
-                if(getYearlyData==null || getYearlyData.size()==0){
-                    //mlWarningStatus.setValue("table data updated.");
+                if(getYearlyData==null || getYearlyData.isEmpty()){
                     mlLceStatus.postValue(LCEStatus.error("Data Load Failed", "Please check your internet connection and retry again."));
                     LCEStatus.success();
                 }else{

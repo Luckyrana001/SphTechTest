@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:background="@android:color/darker_gray">
 
@@ -16,6 +17,16 @@
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retry"
+            android:id="@+id/button_retry"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_below="@+id/text_view_quote"
+            android:layout_centerHorizontal="true" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

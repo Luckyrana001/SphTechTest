@@ -41,16 +41,10 @@ public class RequestHandler {
 
     private static final int TIMEOUT_VALUE = 60000;
     public static RequestHandler requestHandler;
-    //protected Gson gson;
-    //RequestQueue queue;
+
     private Retrofit retrofit;
     private MobileDataUsageRestService service;
 
-   // private long cacheSize = 10 * 1024 * 1024;
-    //Cache myCache = new Cache(BaseFlyContext.getInstant().getApplicationContext().getCacheDir(), cacheSize);
-   public static  File httpCacheDirectory = new File(BaseFlyContext.getInstant().getApplicationContext().getCacheDir(), "responses");
-    public static int cacheSize = 10 * 1024 * 1024; // 10 MiB
-    public static Cache cache = new Cache(httpCacheDirectory, cacheSize);
     public static Utils utils;
 
     public RequestHandler() {
