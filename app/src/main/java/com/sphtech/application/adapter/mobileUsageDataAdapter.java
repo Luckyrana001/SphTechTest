@@ -15,12 +15,10 @@ import com.sphtech.application.model.YearDataModel;
 import java.util.ArrayList;
 
 public class MobileUsageDataAdapter extends RecyclerView.Adapter<MobileUsageDataAdapter.MyViewHolder> {
-    private Context context;
     private ArrayList<YearDataModel> yearlyDataList;
     private ImageClickedListener listener;
 
     public MobileUsageDataAdapter(Context context, ArrayList<YearDataModel> dataList, ImageClickedListener listener) {
-        this.context = context;
         this.yearlyDataList = dataList;
         this.listener = listener;
     }

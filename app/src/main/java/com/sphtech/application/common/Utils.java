@@ -14,7 +14,6 @@ import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import static okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS;
@@ -29,23 +28,6 @@ public class Utils {
     }
 
 
-    public final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Response originalResponse = chain.proceed(chain.request());
-            if (isNetworkAvailable()) {
-                int maxAge = 60; // read from cache for 1 minute
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, max-age=" + maxAge)
-                        .build();
-            } else {
-                int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
-                        .build();
-            }
-        }
-    };
 
 
     public boolean isNetworkAvailable() {
@@ -89,7 +71,7 @@ public class Utils {
         }
         catch (Exception e)
         {
-            //Timber.e( e, "Could not create Cache!" );
+           System.out.print(e.toString());
         }
         return cache;
     }
@@ -97,14 +79,9 @@ public class Utils {
     public  HttpLoggingInterceptor provideHttpLoggingInterceptor ()
     {
         HttpLoggingInterceptor httpLoggingInterceptor =
-                new HttpLoggingInterceptor( new HttpLoggingInterceptor.Logger()
-                {
-                    @Override
-                    public void log (String message)
-                    {
-                        // Timber.d( message );
-                    }
-                } );
+                new HttpLoggingInterceptor(message -> {
+                    System.out.print(message.toString());
+                });
         httpLoggingInterceptor.setLevel( BuildConfig.DEBUG ? HEADERS : NONE );
         return httpLoggingInterceptor;
     }
@@ -132,26 +109,21 @@ public class Utils {
 
     public  Interceptor provideOfflineCacheInterceptor ()
     {
-        return new Interceptor()
-        {
-            @Override
-            public okhttp3.Response intercept (Chain chain) throws IOException
+        return chain -> {
+            Request request = chain.request();
+
+            if (isNetworkAvailable() )
             {
-                Request request = chain.request();
+                CacheControl cacheControl = new CacheControl.Builder()
+                        .maxStale( 7, TimeUnit.DAYS )
+                        .build();
 
-                if (isNetworkAvailable() )
-                {
-                    CacheControl cacheControl = new CacheControl.Builder()
-                            .maxStale( 7, TimeUnit.DAYS )
-                            .build();
-
-                    request = request.newBuilder()
-                            .cacheControl( cacheControl )
-                            .build();
-                }
-
-                return chain.proceed( request );
+                request = request.newBuilder()
+                        .cacheControl( cacheControl )
+                        .build();
             }
+
+            return chain.proceed( request );
         };
     }
 

@@ -1,8 +1,5 @@
 package com.sphtech.application.common;
 
-/**
- * Created by Thet Paing Tun on 9/2/2018.
- */
 
 public class DialogModel {
     private boolean showed;

@@ -12,19 +12,12 @@ import com.sphtech.application.common.ResponseStatus;
 import com.sphtech.application.common.Utils;
 import com.sphtech.application.listener.IResponseReceivedNotifyInterface;
 import com.sphtech.application.listener.ResponseArgs;
-import com.sphtech.application.model.MobileDataConsumptionYearlyModel;
 import com.sphtech.application.model.MobileDataUsageErrorResponse;
 import com.sphtech.application.model.MobileDataUsageResponse;
-import com.sphtech.application.model.QuaterDataModel;
-import com.sphtech.application.model.Records;
-import com.sphtech.application.model.YearDataModel;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -33,8 +26,6 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
-import static com.sphtech.application.MobileDataUsageConstants.START_REQUEST;
 
 public class RequestHandler {
     private static final String TAG = RequestHandler.class.getName();

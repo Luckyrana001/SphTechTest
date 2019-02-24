@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 
 
-/**
- * Content shared objects and values
- */
 public class BaseFlyContext {
 
     private static BaseFlyContext flyContext;

@@ -48,15 +48,25 @@ public class MainActivity extends AppCompatActivity implements ImageClickedListe
 
         ButterKnife.bind(this);
         BaseFlyContext.getInstant().setActivity(this);
+
         IRemoteServices remoteServices = new RemoteServices(this);
         MobileUsageViewModelProvider postProvider = new MobileUsageViewModelProvider(remoteServices);
-        mobileUsageViewModel = ViewModelProviders.of(this, postProvider).get(MobileUsageViewModel.class);
+
+        setupViewModel(postProvider);
+
         setUpObservers();
         yearDataModels = new ArrayList<>();
         setupRecylerView();
         setUpPullToRefreshLayout();
 
     }
+
+    public MobileUsageViewModel setupViewModel(MobileUsageViewModelProvider postProvider){
+
+      return   mobileUsageViewModel = ViewModelProviders.of(this, postProvider).get(MobileUsageViewModel.class);
+
+    }
+
 
     private void setUpPullToRefreshLayout() {
          mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);

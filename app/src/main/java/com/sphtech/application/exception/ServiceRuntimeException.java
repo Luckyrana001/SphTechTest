@@ -10,13 +10,6 @@ public class ServiceRuntimeException extends RuntimeException {
         this.errMessages = errMessages;
     }
 
-    public String getErrCode() {
-        return errCode;
-    }
-
-    public void setErrCode(String errCode) {
-        this.errCode = errCode;
-    }
 
     public String getErrMessages() {
         return errMessages;
